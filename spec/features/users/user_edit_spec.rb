@@ -26,6 +26,23 @@ feature 'User edit', :devise do
     expect(page).to have_content(/.*#{txts[0]}.*|.*#{txts[1]}.*/)
   end
 
+
+  # Scenario: User changes age
+  #   Given I am signed in
+  #   When I change my email address
+  #   Then I see an account updated message
+  scenario 'user changes email address' do
+    user = FactoryGirl.create(:user)
+    login_as(user, :scope => :user)
+    visit edit_user_registration_path(user)
+    fill_in 'Age', :with => '18'
+    fill_in 'Current password', :with => user.password
+    click_button 'Update'
+    txts = [I18n.t( 'devise.registrations.updated'), I18n.t( 'devise.registrations.update_needs_confirmation')]
+    expect(page).to have_content(/.*#{txts[0]}.*|.*#{txts[1]}.*/)
+  end
+
+
   # Scenario: User cannot edit another user's profile
   #   Given I am signed in
   #   When I try to edit another user's profile
@@ -38,5 +55,7 @@ feature 'User edit', :devise do
     expect(page).to have_content 'Edit User'
     expect(page).to have_field('Email', with: me.email)
   end
+
+
 
 end

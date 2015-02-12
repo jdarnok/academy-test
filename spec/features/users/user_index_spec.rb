@@ -22,4 +22,23 @@ feature 'User index page', :devise do
     expect(page).to have_content user.email
   end
 
+  # Scenario: User listed on index page
+  #   Given I am signed in
+  #   When I visit the /all_users link
+  #   Then I see my own email address
+  scenario 'user sees own email address' do
+    user = FactoryGirl.create(:user)
+    login_as(user, scope: :user)
+    visit '/all_users'
+    expect(page).to have_content user.email
+  end
+
+  # Scenario: Visitor accessing index page
+  #   Given I am not signed in
+  #   When I visit the /all_users link
+  #   Then I see failure message
+  scenario 'visitor cant access users page' do
+    visit '/all_users'
+    expect(page).to have_content I18n.t 'devise.failure.unauthenticated'
+  end
 end
