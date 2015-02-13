@@ -1,0 +1,2 @@
+@alertuser = (name) ->
+  alert name
